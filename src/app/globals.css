@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #05050a;
+  --color-bg-raised: #0c0c14;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-ink: #f4f4f8;
+  --color-muted: #8a8a9e;
+  --color-magenta: #ff2bd6;
+  --color-cyan: #00f0ff;
+  --color-lime: #b4ff39;
+  --color-violet: #8b5cf6;
+
+  --font-display: var(--font-unbounded), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-pulse-ring: pulse-ring 1.655s var(--ease-out-expo) infinite; /* 145 BPM × 4 beats */
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-flicker: flicker 4s steps(1) infinite;
+  --animate-glitch-a: glitch-a 3.31s steps(1) infinite; /* 2 bars @ 145 BPM */
+  --animate-glitch-b: glitch-b 3.31s steps(1) infinite;
+
+  /* Hidden at rest; short chromatic bursts that land on the beat grid. */
+  @keyframes glitch-a {
+    0%, 100% { transform: none; opacity: 0; }
+    12% { transform: translate3d(-0.03em, -0.006em, 0); opacity: 0.9; }
+    13% { transform: translate3d(0.02em, 0.004em, 0); clip-path: inset(20% 0 55% 0); }
+    15% { transform: none; opacity: 0; clip-path: none; }
+    62% { transform: translate3d(-0.024em, 0.01em, 0); opacity: 0.9; clip-path: inset(60% 0 8% 0); }
+    64% { transform: none; opacity: 0; clip-path: none; }
+  }
+  @keyframes glitch-b {
+    0%, 100% { transform: none; opacity: 0; }
+    25% { transform: translate3d(0.035em, 0.005em, 0); opacity: 0.9; clip-path: inset(40% 0 30% 0); }
+    27% { transform: none; opacity: 0; clip-path: none; }
+    75% { transform: translate3d(-0.02em, -0.008em, 0); opacity: 0.9; clip-path: inset(5% 0 70% 0); }
+    77% { transform: none; opacity: 0; clip-path: none; }
+  }
+
+  @keyframes pulse-ring {
+    0% { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+  @keyframes marquee {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+  @keyframes flicker {
+    0%, 19%, 21%, 62%, 64%, 100% { opacity: 1; }
+    20%, 63% { opacity: 0.4; }
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-bg text-ink font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-magenta);
+    color: #000;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-cyan);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+  }
+  .eyebrow {
+    @apply font-mono text-xs tracking-[0.3em] uppercase text-muted;
+  }
+  .neon-text {
+    text-shadow: 0 0 18px color-mix(in oklab, currentColor 60%, transparent),
+      0 0 48px color-mix(in oklab, currentColor 30%, transparent);
+  }
+  .glass {
+    @apply border border-line bg-white/[0.03] backdrop-blur-xl;
+  }
+  .grain::after {
+    content: "";
+    position: fixed;
+    inset: -50%;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .scanlines {
+    background-image: repeating-linear-gradient(to bottom, rgb(255 255 255 / 0.03) 0 1px, transparent 1px 3px);
+  }
+}
